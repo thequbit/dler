@@ -49,6 +49,6 @@ class DLer:
                 retsuccess = False
                 break
             else:
-                files.append((filename,datetime))
+                files.append((filename,text,datetime))
         return (files,retsuccess)
 
