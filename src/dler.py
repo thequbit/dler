@@ -1,6 +1,7 @@
 import urllib
 import urllib2
 from time import strftime
+import time
 from random import randint
 
 class DLer:
@@ -18,37 +19,40 @@ class DLer:
                 exists = False
         return exists
 
-    def _gettime(self):
+    def _getisotime(self):
         isotime = strftime("%Y-%m-%d %H:%M:%S")
         return isotime
+
+    def _getdt(self):
+        dt = strftime("%Y%m%d%H%M%S")
+        return dt
 
     def _download(self,url,dest):
         success = True
         try: 
             urlfile = url[url.rfind("/")+1:]
-            rndpart = randint(0,1000000000000)
-            _filename = "{0}/{1}{2}.download".format(dest,urlfile,rndpart)
+            t = time.time() 
+            _filename = "{0}/{1}_{2}.download".format(dest,urlfile,t)
             while self._fileexists(_filename):
-                rndpart = randint(0,1000000000000)
-                _filename = "{0}/{1}{2}.download".format(dest,urlfile,rndpart)
+                _filename = "{0}/{1}_{2}.download".format(dest,urlfile,t)
             print _filename
             filename,_headers = urllib.urlretrieve(url,_filename)
         except:
             filename = ""
             success = False
-        datetime = self._gettime()
-        return (filename,datetime,success)
+        isodatetime = self._getisotime()
+        return (filename,isodatetime,t,success)
 
     def dl(self,links,destdir):
         retsuccess = True
         files = []
         for _link in links:
             link,text = _link
-            filename,datetime,success = self._download(link,destdir)
+            filename,datetime,t,success = self._download(link,destdir)
             if not success:
                 retsuccess = False
                 break
             else:
-                files.append((filename,text,datetime))
+                files.append((filename,text,datetime,t))
         return (files,retsuccess)
 
