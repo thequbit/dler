@@ -41,18 +41,18 @@ class DLer:
             filename = ""
             success = False
         isodatetime = self._getisotime()
-        return (filename,isodatetime,t,success)
+        return (filename,isodatetime,success)
 
     def dl(self,links,destdir):
         retsuccess = True
         files = []
         for _link in links:
             link,text = _link
-            filename,datetime,t,success = self._download(link,destdir)
+            filename,datetime,success = self._download(link,destdir)
             if not success:
                 retsuccess = False
                 break
             else:
-                files.append((filename,text,datetime,t))
+                files.append((filename,text,datetime))
         return (files,retsuccess)
 
